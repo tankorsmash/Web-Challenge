@@ -173,3 +173,6 @@ submission.bundle
 *.un
 *.swp
 *.orig
+
+#udemy login info
+backend/udemy_config.py
