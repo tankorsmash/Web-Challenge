@@ -4,32 +4,29 @@ import { hot } from 'react-hot-loader'
 
 class ReviewData extends Component {
     static propTypes = {
-        ratings: PropTypes.number.isRequired,
+        rating: PropTypes.number.isRequired,
     }
 
     render() {
         return (
             <div>
-                <span> Rating {this.props.ratings} </span>
+                <span> Rating {this.props.rating} </span>
             </div>
         );
     }
 };
 
 class App extends Component {
-
     state = {
-        currentData: {
-            results: [],
-            timestamp: '',
-        }
+        ratings: [],
+        timestamp: '',
     }
 
     async componentDidMount() {
-        const res = await fetch("/hello")
+        const res = await fetch("/ratings")
         const json = await res.json()
         this.setState({
-            currentData: json.current_data
+            ratings: json.ratings
         })
     }
 
@@ -38,8 +35,8 @@ class App extends Component {
             <div className="container">
                 <h3> Welcome to ZOMBOCOM </h3>
                 <div>
-                    { this.state.currentData.results.map((ratings, i) => {
-                        return ( <ReviewData key={i} ratings={ratings.rating} /> );
+                    { this.state.ratings.slice(0, 10).map((data, i) => {
+                        return ( <ReviewData key={i} raw_data={data} rating={data.rating_score} /> );
                     }) }
                 </div>
             </div>
