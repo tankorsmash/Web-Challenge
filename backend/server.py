@@ -6,7 +6,7 @@ server = Flask(__name__)
 
 @server.route('/hello')
 def hello():
-    return jsonify({"hello": "world"})
+    return jsonify({"current_data": udemy_api.get_latest_reviews()})
 
 if __name__ == "__main__":
     server.run(host='0.0.0.0', port=9000, debug=True)
