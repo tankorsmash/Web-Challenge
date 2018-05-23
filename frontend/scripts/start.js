@@ -74,7 +74,9 @@ choosePort(HOST, DEFAULT_PORT)
         clearConsole();
       }
       console.log(chalk.cyan('Starting the development server...\n'));
-      openBrowser(urls.localUrlForBrowser);
+      let host = HOST;
+      if (HOST == "0.0.0.0") { host = "localhost"; }
+      console.log(`NOTE: not opening a browser, visit http://${host}:${port} manually`);
     });
 
     ['SIGINT', 'SIGTERM'].forEach(function(sig) {
