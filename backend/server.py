@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
 
+import udemy_api
+
 server = Flask(__name__)
 
 @server.route('/hello')
