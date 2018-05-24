@@ -176,3 +176,5 @@ submission.bundle
 
 #udemy login info
 backend/udemy_config.py
+#database
+backend/ratings.db
