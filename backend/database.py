@@ -47,7 +47,7 @@ def get_averages_over_time_sql():
 
     return ratings
 
-def get_averages_over_time(all_ratings):
+def _get_averages_over_time(all_ratings):
     """
     for each RatingAggregate, check if its up to the min datetime
     if it is:
@@ -86,6 +86,10 @@ def get_averages_over_time(all_ratings):
             rating_idx += 1
 
     return averages_by_hour
+
+def calc_ratings_over_time():
+    rating_aggregates = get_averages_over_time_sql()
+    return _get_averages_over_time(rating_aggregates)
 
 
 def init_database():
