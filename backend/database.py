@@ -19,7 +19,7 @@ def create_fake_data(count):
     for i in range(count):
         rating_score=round(random.uniform(0, 5))
         username="test_user"
-        created_at=arrow.now().format(MODEL_DATE_FORMAT)
+        created_at=arrow.now().shift(hours=-random.randint(0, 24*7)).format(MODEL_DATE_FORMAT)
 
         records.append((rating_score, username, created_at))
 
@@ -29,6 +29,4 @@ def create_fake_data(count):
         for step in range(0, count, step_range):
             Rating.insert_many(records[step:step+step_range], fields=fields).execute()
     print("done creating fake records")
-
-create_fake_data(10000)
 

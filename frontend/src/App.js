@@ -10,6 +10,7 @@ class ReviewData extends Component {
     render() {
         return (
             <div>
+                <div> {this.props.timestamp} </div>
                 <span> Rating {this.props.rating} </span>
             </div>
         );
@@ -33,10 +34,10 @@ class App extends Component {
     render() {
         return (
             <div className="container">
-                <h3> Welcome to ZOMBOCOM </h3>
+                <h3> Hourly average </h3>
                 <div>
                     { this.state.ratings.slice(0, 10).map((data, i) => {
-                        return ( <ReviewData key={i} raw_data={data} rating={data.rating_score} /> );
+                        return ( <ReviewData key={i} raw_data={data} timestamp={data[0]} rating={data[1]} /> );
                     }) }
                 </div>
             </div>

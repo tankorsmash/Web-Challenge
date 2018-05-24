@@ -3,6 +3,7 @@ from peewee import (
 )
 
 MODEL_DATE_FORMAT = "YYYY-MM-DD HH:MM:SS" #default peewee format
+MODEL_DATE_FORMAT_ARROW = "YYYY-MM-DD HH:mm:SS" #default peewee format
 
 database = SqliteDatabase('ratings.db')
 class Rating(Model):
