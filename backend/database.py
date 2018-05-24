@@ -1,6 +1,9 @@
 import arrow
 import random
+import peewee
 import warnings
+
+from playhouse.sqlite_udf import register_all
 
 from peewee import (
     SqliteDatabase, Model, CharField, DateField, FloatField
@@ -25,8 +28,24 @@ def create_bulk_ratings(rows):
 
     print("done creating rows")
 
+def get_averages_over_time_sql():
+    """
+    returns ( year-month-day-hour, num_ratings, total_rating ) for that hour
+    to be processed elsewhere
+    """
+    ratings = Rating.select(
+        peewee.fn.strftime("%Y-%m-%d-%H", Rating.created),
+        peewee.fn.Count(Rating.rating_score),
+        peewee.fn.Sum(Rating.rating_score)
+    ).group_by(peewee.fn.strftime("%Y-%m-%d-%H", Rating.created)).tuples()
+
+    return ratings
+
+
 def init_database():
     database = SqliteDatabase('ratings.db')
+    register_all(database)
+
 
     database.connect()
     database.create_tables([Rating])

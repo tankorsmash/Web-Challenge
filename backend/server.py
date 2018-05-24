@@ -5,7 +5,7 @@ from flask import Flask, jsonify
 
 import udemy_api
 
-from database import init_database, create_bulk_ratings
+from database import init_database, create_bulk_ratings, get_averages_over_time_sql
 from models import Rating, MODEL_DATE_FORMAT_ARROW
 
 server = Flask(__name__)
@@ -56,7 +56,6 @@ def get_averages_over_time(ratings):
             rating_idx += 1
 
     return averages_by_hour
-
 
 
 @server.route('/ratings')
