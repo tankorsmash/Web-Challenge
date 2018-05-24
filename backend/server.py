@@ -10,6 +10,23 @@ from models import Rating, MODEL_DATE_FORMAT_ARROW
 
 server = Flask(__name__)
 
+def format_averages_for_chartjs(averages):
+    """
+    takes the averages dict and turns it into
+    date labels, and two axes of data (count, avg)
+    """
+    date_labels = []
+    average_axis = []
+    count_axis = []
+
+    for date, axes in averages.items():
+        date_labels.append(date)
+        average_axis.append(axes.get('rating_average', -1))
+        count_axis.append(axes.get('rating_count', -1))
+
+    return date_labels, average_axis, count_axis
+
+
 @server.route('/ratings')
 def ratings():
     #WIP only get data if non exists in database
@@ -19,10 +36,14 @@ def ratings():
         create_bulk_ratings(all_ratings)
 
     print("getting ratings from DB")
-    averages = calc_ratings_over_time()
+    date_labels, average_axis, count_axis = format_averages_for_chartjs(calc_ratings_over_time())
     print("returning data")
     return jsonify({
-        "ratings": list(averages.items())
+        "chart_data": {
+            "date_labels": date_labels,
+            "average_axis": average_axis,
+            "count_axis": count_axis,
+        }
     })
 
 if __name__ == "__main__":

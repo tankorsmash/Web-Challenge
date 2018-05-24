@@ -74,7 +74,7 @@ def _get_averages_over_time(all_ratings):
             if rating_created > next_hour:
                 if current_count:
                     averages_by_hour[current_hour.format(MODEL_DATE_FORMAT_ARROW)] = {
-                        "average": current_sum/current_count,
+                        "rating_average": current_sum/current_count,
                         "rating_count": current_count
                     }
                 break
@@ -95,7 +95,6 @@ def calc_ratings_over_time():
 def init_database():
     database = SqliteDatabase('ratings.db')
     register_all(database)
-
 
     database.connect()
     database.create_tables([Rating])
