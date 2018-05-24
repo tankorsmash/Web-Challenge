@@ -22,7 +22,7 @@ def get_floored_hour_of_rating(rating):
         import ipdb; ipdb.set_trace()
 
 
-def get_averages_over_time(ratings):
+def get_averages_over_time(all_ratings):
     """
     for each rating, check if its up to the min datetime
     if it is:
@@ -31,7 +31,6 @@ def get_averages_over_time(ratings):
       copy current average until the current rating's hour is reached
     """
 
-    all_ratings = ratings[:25000]
     start_time = get_floored_hour_of_rating(all_ratings[0])
     end_time = arrow.utcnow()
 

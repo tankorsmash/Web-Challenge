@@ -1,15 +1,14 @@
 import arrow
 import random
-import peewee
 import warnings
 
-from playhouse.sqlite_udf import register_all
-
+import peewee
 from peewee import (
     SqliteDatabase, Model, CharField, DateField, FloatField
 )
+from playhouse.sqlite_udf import register_all
 
-from models import Rating, MODEL_DATE_FORMAT
+from models import Rating, RatingAggregate, MODEL_DATE_FORMAT_ARROW
 
 
 def create_bulk_ratings(rows):
@@ -37,9 +36,56 @@ def get_averages_over_time_sql():
         peewee.fn.strftime("%Y-%m-%d-%H", Rating.created),
         peewee.fn.Count(Rating.rating_score),
         peewee.fn.Sum(Rating.rating_score)
-    ).group_by(peewee.fn.strftime("%Y-%m-%d-%H", Rating.created)).tuples()
+    ) \
+    .order_by(Rating.created) \
+    .group_by(
+        peewee.fn.strftime("%Y-%m-%d-%H", Rating.created)
+    ).tuples()
+
+    ratings = list(map(lambda data: RatingAggregate(*data), ratings))
+
 
     return ratings
+
+def get_averages_over_time(all_ratings):
+    """
+    for each RatingAggregate, check if its up to the min datetime
+    if it is:
+       calc some stats, break
+    if not:
+      add its count and sum to the running count
+      loop
+    """
+
+    TUPLE_DATETIME_FORMAT = "YYYY-MM-DD-HH"
+    start_time = arrow.get(all_ratings[0][0], TUPLE_DATETIME_FORMAT )
+    end_time = arrow.utcnow()
+
+    averages_by_hour = dict()
+
+    rating_idx = 0
+    current_count = 0
+    current_sum = 0
+    for current_hour, next_hour in arrow.Arrow.interval('hour', start_time, end_time):
+        while rating_idx < len(all_ratings):
+            rating = all_ratings[rating_idx]
+
+            rating_created = arrow.get(rating[0], TUPLE_DATETIME_FORMAT)
+            if rating_created > next_hour:
+                if current_count:
+                    averages_by_hour[current_hour.format(MODEL_DATE_FORMAT_ARROW)] = {
+                        "average": current_sum/current_count,
+                        "rating_count": current_count
+                    }
+                break
+
+            #keep on iterating through the ratings
+            current_count += rating.rating_count
+            current_sum += rating.rating_sum
+
+            rating_idx += 1
+
+    return averages_by_hour
 
 
 def init_database():
