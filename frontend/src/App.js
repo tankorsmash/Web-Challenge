@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader'
+import { Line as LineChart } from 'react-chartjs';
 
 class ReviewData extends Component {
     static propTypes = {
@@ -32,9 +33,11 @@ class App extends Component {
     }
 
     render() {
+        let data = this.state.ratings;
         return (
             <div className="container">
                 <h3> Hourly average </h3>
+                <LineChart data={data} />
                 <div>
                     { this.state.ratings.slice(0, 10).map((data, i) => {
                         return ( <ReviewData key={i} raw_data={data} timestamp={data[0]} rating={data[1]} /> );

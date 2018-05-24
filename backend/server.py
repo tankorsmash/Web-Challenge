@@ -5,8 +5,8 @@ from flask import Flask, jsonify
 
 import udemy_api
 
+from database import init_database, create_bulk_ratings
 from models import Rating, MODEL_DATE_FORMAT_ARROW
-from database import create_fake_data
 
 server = Flask(__name__)
 
@@ -16,7 +16,7 @@ def get_all_ratings():
 
 def get_floored_hour_of_rating(rating):
     try:
-        return arrow.get(rating.created_at, MODEL_DATE_FORMAT_ARROW).floor("hour")
+        return arrow.get(rating.created).floor("hour")
     except Exception as e:
         print(e)
         import ipdb; ipdb.set_trace()
@@ -43,8 +43,8 @@ def get_averages_over_time(ratings):
         while rating_idx < len(all_ratings):
             rating = all_ratings[rating_idx]
 
-            rating_created_at = get_floored_hour_of_rating(rating)
-            if rating_created_at > next_hour:
+            rating_created = get_floored_hour_of_rating(rating)
+            if rating_created > next_hour:
                 #calc mean for the current hour without including this rating
                 if ratings:
                     averages_by_hour[current_hour.format(MODEL_DATE_FORMAT_ARROW)] = statistics.mean(ratings)
@@ -61,11 +61,14 @@ def get_averages_over_time(ratings):
 
 @server.route('/ratings')
 def ratings():
+    #WIP only get data if non exists in database
+    #TODO make it autoupdate every hour
     if (Rating.select().count() == 0):
-        create_fake_data(100000)
+        all_ratings = udemy_api.get_all_ratings()
+        create_bulk_ratings(all_ratings)
 
     print("getting ratings from DB")
-    ratings = get_all_ratings().order_by(Rating.created_at.asc())
+    ratings = get_all_ratings().order_by(Rating.created.asc())
     print("calculating averages over time")
     averages = get_averages_over_time(ratings)
     print("returning data")
@@ -74,4 +77,6 @@ def ratings():
     })
 
 if __name__ == "__main__":
+
+    init_database()
     server.run(host='0.0.0.0', port=9000, debug=True)

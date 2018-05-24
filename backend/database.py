@@ -8,28 +8,25 @@ from peewee import (
 
 from models import Rating, MODEL_DATE_FORMAT
 
-database = SqliteDatabase('ratings.db')
 
-database.connect()
-database.create_tables([Rating])
+def create_bulk_ratings(rows):
+    fields = [Rating.udemy_id, Rating.created, Rating.rating_score]
 
-def create_fake_data(count):
-    warnings.warn("Should be using the API now that Udemy has accepted", DeprecationWarning)
-
-    fields = [Rating.rating_score, Rating.username, Rating.created_at]
-
-    records = []
-    for i in range(count):
-        rating_score=round(random.uniform(0, 5))
-        username="test_user"
-        created_at=arrow.now().shift(hours=-random.randint(0, 24*7)).format(MODEL_DATE_FORMAT)
-
-        records.append((rating_score, username, created_at))
-
-    print("creating {} fake records".format(count))
+    count = len(rows)
+    print("creating {} rows".format(count))
+    database = SqliteDatabase('ratings.db')
     with database.atomic():
         step_range = 250 #scale down as needed
         for step in range(0, count, step_range):
-            Rating.insert_many(records[step:step+step_range], fields=fields).execute()
-    print("done creating fake records")
+            Rating.insert_many(
+                rows[step:step+step_range],
+                fields=fields
+            ).execute()
 
+    print("done creating rows")
+
+def init_database():
+    database = SqliteDatabase('ratings.db')
+
+    database.connect()
+    database.create_tables([Rating])
