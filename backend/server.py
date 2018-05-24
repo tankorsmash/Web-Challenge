@@ -34,7 +34,6 @@ def get_averages_over_time(ratings):
     all_ratings = ratings[:25000]
     start_time = get_floored_hour_of_rating(all_ratings[0])
     end_time = arrow.utcnow()
-    print('start', start_time.humanize(), 'end', end_time.humanize())
 
     ratings = []
     averages_by_hour = dict()
@@ -42,15 +41,9 @@ def get_averages_over_time(ratings):
     rating_idx = 0
     for current_hour, next_hour in arrow.Arrow.interval('hour', start_time, end_time):
         while rating_idx < len(all_ratings):
-            # print("rating idx", rating_idx)
-            try:
-                rating = all_ratings[rating_idx]
-            except IndexError:
-                print("breaking at", rating_idx)
-                break
+            rating = all_ratings[rating_idx]
 
             rating_created_at = get_floored_hour_of_rating(rating)
-            # print("rating created_at", rating_created_at.format(MODEL_DATE_FORMAT_ARROW), "vs next_hour", next_hour.format(MODEL_DATE_FORMAT_ARROW))
             if rating_created_at > next_hour:
                 #calc mean for the current hour without including this rating
                 if ratings:
@@ -62,18 +55,20 @@ def get_averages_over_time(ratings):
 
             rating_idx += 1
 
-    print("averages_by_hour:", len(averages_by_hour))
     return averages_by_hour
 
 
 
 @server.route('/ratings')
-def hello():
+def ratings():
     if (Rating.select().count() == 0):
         create_fake_data(100000)
 
+    print("getting ratings from DB")
     ratings = get_all_ratings().order_by(Rating.created_at.asc())
+    print("calculating averages over time")
     averages = get_averages_over_time(ratings)
+    print("returning data")
     return jsonify({
         "ratings": list(averages.items())
     })
