@@ -1,5 +1,6 @@
 import arrow
 import random
+import warnings
 
 from peewee import (
     SqliteDatabase, Model, CharField, DateField, FloatField
@@ -13,6 +14,8 @@ database.connect()
 database.create_tables([Rating])
 
 def create_fake_data(count):
+    warnings.warn("Should be using the API now that Udemy has accepted", DeprecationWarning)
+
     fields = [Rating.rating_score, Rating.username, Rating.created_at]
 
     records = []
