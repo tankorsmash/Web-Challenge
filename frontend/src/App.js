@@ -29,7 +29,7 @@ class App extends Component {
             <div>
                 <GamedevTvNavbar/>
                 <div className="container">
-                    <h3>Ratings over time</h3>
+                    <h3>Complete C# Unity Developer 3D - Learn to Code Making Games</h3>
                     <RatingChart/>
                 </div>
             </div>

@@ -22,11 +22,11 @@ class RatingDateFilterDropdown extends React.Component {
                     <small>Range:</small> { this.titleCaseDateFilter() }
                 </DropdownToggle>
                 <DropdownMenu>
-                    <DropdownItem onClick={() => { this.props.setDateRange('all'); } }>All</DropdownItem>
-                    <DropdownItem onClick={() => { this.props.setDateRange('year'); } }>Year</DropdownItem>
-                    <DropdownItem onClick={() => { this.props.setDateRange('month'); } }>Month</DropdownItem>
-                    <DropdownItem onClick={() => { this.props.setDateRange('week'); } }>Week</DropdownItem>
-                    <DropdownItem onClick={() => { this.props.setDateRange('day'); } }>Day</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('all'); } }>All Time</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('year'); } }>Last Year</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('month'); } }>Last Month</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('week'); } }>Last Week</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('day'); } }>Last Day</DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
         );
