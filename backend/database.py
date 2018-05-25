@@ -62,7 +62,6 @@ def get_averages_over_time_sql(date_filter='all'):
 
     ratings = list(map(lambda data: RatingAggregate(*data), ratings))
 
-
     return ratings
 
 def _get_averages_over_time(all_ratings):
@@ -108,7 +107,6 @@ def _get_averages_over_time(all_ratings):
 def calc_ratings_over_time(date_filter='all'):
     rating_aggregates = get_averages_over_time_sql(date_filter=date_filter)
     return _get_averages_over_time(rating_aggregates)
-
 
 def init_database():
     database = SqliteDatabase('ratings.db')

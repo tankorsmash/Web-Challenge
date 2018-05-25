@@ -10,6 +10,7 @@ from models import Rating, MODEL_DATE_FORMAT_ARROW
 
 server = Flask(__name__)
 
+
 def format_averages_for_chartjs(averages):
     """
     takes the averages dict and turns it into
@@ -61,6 +62,10 @@ def refresh_ratings():
 
 @server.route('/fetch_ratings')
 def fetch_ratings():
+    """
+    fetches ratings from the database, or from the API if they don't exist
+    """
+
     #if the DB is empty, fetch the data
     if (Rating.select().count() == 0):
         clean_and_update_ratings(clean=False)

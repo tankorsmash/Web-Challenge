@@ -4,7 +4,7 @@ from peewee import (
 )
 
 MODEL_DATE_FORMAT = 'YYYY-MM-DD HH:MM:SS' #default peewee format
-MODEL_DATE_FORMAT_ARROW = 'YYYY-MM-DD HH:mm:SS' #default peewee format
+MODEL_DATE_FORMAT_ARROW = 'YYYY-MM-DD HH:mm:SS' #default peewee format but for arrow.format output
 
 database = SqliteDatabase('ratings.db')
 
