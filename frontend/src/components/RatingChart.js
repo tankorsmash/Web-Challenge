@@ -4,6 +4,11 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import { Line } from 'react-chartjs-2';
 
+const JSON_HEADERS = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+};
+
 export default class RatingChart extends React.Component {
     state = {
         chartData: {
@@ -32,8 +37,16 @@ export default class RatingChart extends React.Component {
         })
     }
 
-    async componentDidMount() {
+    componentDidMount = async () => {
+        this.forceUpdateInterval = setInterval(() => {
+            this.forceUpdate();
+        }, 1000*60*60);
+
         this.updateData();
+    }
+
+    componentWillUnmount = () => {
+        clearInterval(this.forceUpdateInterval);
     }
 
     forceUpdate = async () => {
@@ -45,10 +58,7 @@ export default class RatingChart extends React.Component {
         const res = await fetch('/refresh_ratings', {
             method: 'POST',
             body: JSON.stringify({'do_refresh': true}),
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
+            headers: JSON_HEADERS,
         });
         const json = await res.json()
         this.setState({
