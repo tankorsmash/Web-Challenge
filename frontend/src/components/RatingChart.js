@@ -19,12 +19,14 @@ export default class RatingChart extends React.Component {
     updateData = async () => {
         this.setState({
             refreshButtonText: 'Refreshing...',
+            dataButtonsDisabled: true,
         });
         const res = await fetch('/fetch_ratings')
         const json = await res.json()
         this.setState({
             chartData: json.chart_data,
             refreshButtonText: 'Refresh',
+            dataButtonsDisabled: false,
         })
     }
 
@@ -35,6 +37,7 @@ export default class RatingChart extends React.Component {
     forceUpdate = async () => {
         this.setState({
             forceUpdateButtonText: 'Forcing update...',
+            dataButtonsDisabled: true,
         });
 
         const res = await fetch('/refresh_ratings', {
@@ -48,6 +51,7 @@ export default class RatingChart extends React.Component {
         const json = await res.json()
         this.setState({
             forceUpdateButtonText: 'Force update',
+            dataButtonsDisabled: false,
         });
 
         await this.updateData();
@@ -107,8 +111,11 @@ export default class RatingChart extends React.Component {
 
         return (
             <div>
-                <Button onClick={this.updateData}> {this.state.refreshButtonText} </Button>
-                <Button onClick={this.forceUpdate}> {this.state.forceUpdateButtonText} </Button>
+                <div>
+                    <Button color="primary" disabled={this.state.dataButtonsDisabled} onClick={this.updateData}> {this.state.refreshButtonText} </Button>
+                    &nbsp;
+                    <Button color="secondary" disabled={this.state.dataButtonsDisabled} onClick={this.forceUpdate}> {this.state.forceUpdateButtonText} </Button>
+                </div>
                 <Line options={chartOptions} data={chartData} />
             </div>
         );
