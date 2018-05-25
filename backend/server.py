@@ -29,6 +29,10 @@ def format_averages_for_chartjs(averages):
 def clean_and_update_ratings(clean=True):
     """
     wipes database, requeries API and creates db rows
+
+    In a full project, instead of dangerously wiping all Rating data,
+     I'd leave them there and compare the new data to the old, and
+     only add the ones I haven't added already.
     """
     if clean:
         print("deleting all Ratings")
