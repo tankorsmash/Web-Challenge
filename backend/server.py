@@ -1,7 +1,7 @@
 import arrow
 import statistics
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 import udemy_api
 
@@ -43,7 +43,7 @@ def clean_and_update_ratings(clean=True):
 @server.route('/refresh_ratings', methods=["POST"])
 def refresh_ratings():
     #use POST only to make sure we're deliberately purging the DB
-    if (not request.args.get("do_refresh")):
+    if (not request.json.get("do_refresh")):
         return jsonify({
             "success": False,
             "message": "No do_refresh param, no action taken",
