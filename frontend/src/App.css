@@ -1,28 +1,21 @@
-.App {
-  text-align: center;
+#gamedevtv-navbar {
+    background-color: #24a729 !important;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.navbar-brand {
+    padding-left: 20%;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.navbar-brand img {
+    height: 40px;
 }
 
-.App-title {
-  font-size: 1.5em;
+body {
+    background-color: #f4f4f4;
 }
 
-.App-intro {
-  font-size: large;
+.container {
+    background: #fff;
+    padding-top: 25px;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
