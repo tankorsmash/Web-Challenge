@@ -1,47 +1,72 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader'
-import { Line as LineChart } from 'react-chartjs';
-
-class ReviewData extends Component {
-    static propTypes = {
-        rating: PropTypes.number.isRequired,
-    }
-
-    render() {
-        return (
-            <div>
-                <div> {this.props.timestamp} </div>
-                <span> Rating {this.props.rating} </span>
-            </div>
-        );
-    }
-};
+import { Line } from 'react-chartjs-2';
 
 class App extends Component {
     state = {
-        ratings: [],
-        timestamp: '',
+        chartData: {
+            date_labels: [],
+            average_axis: [],
+            count_axis: [],
+        },
     }
 
     async componentDidMount() {
         const res = await fetch("/ratings")
         const json = await res.json()
         this.setState({
-            ratings: json.ratings
+            chartData: json.chart_data
         })
     }
 
     render() {
-        let data = this.state.ratings;
+        let rawChartData = this.state.chartData;
+
+        const limit = 1000;
+        let chartData = {
+            labels: rawChartData.date_labels.slice(0, limit),
+            datasets: [{
+                label: "Averages",
+                data: rawChartData.average_axis.slice(0, limit),
+                fill: false,
+                yAxisID: "y-axis-avg",
+            },{
+                label: "Total Ratings",
+                data: rawChartData.count_axis.slice(0, limit),
+                fill: false,
+                yAxisID: "y-axis-count",
+            }]
+        };
+
+        let chartOptions = {
+            responsive: true,
+            scales: {
+                stacked: false,
+                yAxes: [{
+                    type: "linear",
+                    position: "left",
+                    display: true,
+                    id: "y-axis-avg",
+                }, {
+                    type: "linear",
+                    display: true,
+                    position: "right",
+                    id: "y-axis-count",
+
+                    // grid line settings
+                    gridLines: {
+                        drawOnChartArea: false, // only want the grid lines for one axis to show up
+                    },
+                }],
+            },
+        };
+
         return (
             <div className="container">
                 <h3> Hourly average </h3>
-                <LineChart data={data} />
+                <Line  options={chartOptions} data={chartData} />
                 <div>
-                    { this.state.ratings.slice(0, 10).map((data, i) => {
-                        return ( <ReviewData key={i} raw_data={data} timestamp={data[0]} rating={data[1]} /> );
-                    }) }
                 </div>
             </div>
         );
