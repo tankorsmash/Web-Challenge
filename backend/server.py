@@ -68,12 +68,15 @@ def fetch_ratings():
     print('getting ratings from DB')
     date_labels, average_axis, count_axis = format_averages_for_chartjs(calc_ratings_over_time())
     print('returning data')
+
+    current_average = udemy_api.get_current_average()
     return jsonify({
         'chart_data': {
             'date_labels': date_labels,
             'average_axis': average_axis,
             'count_axis': count_axis,
-        }
+        },
+        'current_average': current_average,
     })
 
 if __name__ == '__main__':

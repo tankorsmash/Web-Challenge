@@ -11,6 +11,7 @@ export default class RatingChart extends React.Component {
             average_axis: [],
             count_axis: [],
         },
+        currentAverage: "N/A",
         refreshButtonText: 'Refresh',
         forceUpdateButtonText: 'Force Update',
 
@@ -27,6 +28,7 @@ export default class RatingChart extends React.Component {
             chartData: json.chart_data,
             refreshButtonText: 'Refresh',
             dataButtonsDisabled: false,
+            currentAverage: json.current_average,
         })
     }
 
@@ -111,10 +113,13 @@ export default class RatingChart extends React.Component {
 
         return (
             <div>
-                <div>
-                    <Button color="primary" disabled={this.state.dataButtonsDisabled} onClick={this.updateData}> {this.state.refreshButtonText} </Button>
-                    &nbsp;
-                    <Button color="secondary" disabled={this.state.dataButtonsDisabled} onClick={this.forceUpdate}> {this.state.forceUpdateButtonText} </Button>
+                <div className="row">
+                    <div className="col h5 justify-content-start" > Current Average: {this.state.currentAverage} </div>
+                    <div className="col a justify-content-end">
+                        <Button className="float-right" color="primary" disabled={this.state.dataButtonsDisabled} onClick={this.updateData}> {this.state.refreshButtonText} </Button>
+                        &nbsp;
+                        <Button className="float-right" color="secondary" disabled={this.state.dataButtonsDisabled} onClick={this.forceUpdate}> {this.state.forceUpdateButtonText} </Button>
+                    </div>
                 </div>
                 <Line options={chartOptions} data={chartData} />
             </div>

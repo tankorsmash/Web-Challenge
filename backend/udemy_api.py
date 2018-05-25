@@ -106,8 +106,19 @@ def get_all_ratings():
 
     return all_ratings
 
+def get_current_average():
+    params = _format_api_fields({"course": "rating"})
+
+    resp = session.get(
+        _format_api_url(""),
+        params=params,
+        timeout=15
+    )
+    resp_json = resp.json()
+
+    return round(resp_json.get("rating", 0), 2)
+
+
 
 if __name__ == "__main__":
-    print("getting ratings")
-    get_all_ratings()
-    print("done")
+    print("rating", get_current_average())
