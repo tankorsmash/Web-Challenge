@@ -29,12 +29,16 @@ class App extends Component {
             datasets: [{
                 label: "Averages",
                 data: rawChartData.average_axis.slice(0, limit),
+                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgb(255, 99, 132)",
                 fill: false,
                 yAxisID: "y-axis-avg",
             },{
                 label: "Total Ratings",
                 data: rawChartData.count_axis.slice(0, limit),
                 fill: false,
+                borderColor: "rgb(54, 162, 235)",
+                backgroundColor: "rgb(54, 162, 235)",
                 yAxisID: "y-axis-count",
             }]
         };
