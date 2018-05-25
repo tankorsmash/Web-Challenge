@@ -40,15 +40,23 @@ def clean_and_update_ratings(clean=True):
     create_bulk_ratings(all_ratings)
     print("done clean_and_update_ratings")
 
-@server.route('/refresh_ratings')
+@server.route('/refresh_ratings', methods=["POST"])
 def refresh_ratings():
+    #use POST only to make sure we're deliberately purging the DB
+    if (not request.args.get("do_refresh")):
+        return jsonify({
+            "success": False,
+            "message": "No do_refresh param, no action taken",
+        })
+
     clean_and_update_ratings()
     return jsonify({
         "success": True,
+        "message": "Cleaned and updated",
     })
 
-@server.route('/ratings')
-def ratings():
+@server.route('/fetch_ratings')
+def fetch_ratings():
     #if the DB is empty, fetch the data
     if (Rating.select().count() == 0):
         clean_and_update_ratings(clean=False)
@@ -65,6 +73,5 @@ def ratings():
     })
 
 if __name__ == "__main__":
-
     init_database()
     server.run(host='0.0.0.0', port=9000, debug=True)
