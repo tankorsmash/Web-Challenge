@@ -112,7 +112,7 @@ export default class RatingChart extends React.Component {
                 fill: false,
                 yAxisID: 'y-axis-avg',
             },{
-                label: 'Total Ratings',
+                label: "New Ratings",
                 data: count_axis.slice(0, limit),
                 fill: false,
                 borderColor: 'rgb(54, 162, 235)',
