@@ -39,7 +39,7 @@ class GamedevTvNavbar extends Component {
 class App extends Component {
     render() {
         return (
-            <div className="">
+            <div>
                 <GamedevTvNavbar/>
                 <div className="container">
                     <h3>Ratings over time</h3>

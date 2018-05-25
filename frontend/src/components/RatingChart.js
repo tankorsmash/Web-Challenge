@@ -11,20 +11,20 @@ export default class RatingChart extends React.Component {
             average_axis: [],
             count_axis: [],
         },
-        refreshButtonText: "Refresh",
-        forceUpdateButtonText: "Force Update",
+        refreshButtonText: 'Refresh',
+        forceUpdateButtonText: 'Force Update',
 
     }
 
     updateData = async () => {
         this.setState({
-            refreshButtonText: "Refreshing...",
+            refreshButtonText: 'Refreshing...',
         });
-        const res = await fetch("/fetch_ratings")
+        const res = await fetch('/fetch_ratings')
         const json = await res.json()
         this.setState({
             chartData: json.chart_data,
-            refreshButtonText: "Refresh",
+            refreshButtonText: 'Refresh',
         })
     }
 
@@ -34,12 +34,12 @@ export default class RatingChart extends React.Component {
 
     forceUpdate = async () => {
         this.setState({
-            forceUpdateButtonText: "Forcing update...",
+            forceUpdateButtonText: 'Forcing update...',
         });
 
-        const res = await fetch("/refresh_ratings", {
-            method: "POST",
-            body: JSON.stringify({"do_refresh": true}),
+        const res = await fetch('/refresh_ratings', {
+            method: 'POST',
+            body: JSON.stringify({'do_refresh': true}),
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ export default class RatingChart extends React.Component {
         });
         const json = await res.json()
         this.setState({
-            forceUpdateButtonText: "Force update",
+            forceUpdateButtonText: 'Force update',
         });
 
         await this.updateData();
@@ -60,19 +60,19 @@ export default class RatingChart extends React.Component {
         let chartData = {
             labels: date_labels.slice(0, limit),
             datasets: [{
-                label: "Averages",
+                label: 'Averages',
                 data: average_axis.slice(0, limit),
-                borderColor: "rgb(255, 99, 132)",
-                backgroundColor: "rgb(255, 99, 132)",
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgb(255, 99, 132)',
                 fill: false,
-                yAxisID: "y-axis-avg",
+                yAxisID: 'y-axis-avg',
             },{
-                label: "Total Ratings",
+                label: 'Total Ratings',
                 data: count_axis.slice(0, limit),
                 fill: false,
-                borderColor: "rgb(54, 162, 235)",
-                backgroundColor: "rgb(54, 162, 235)",
-                yAxisID: "y-axis-count",
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgb(54, 162, 235)',
+                yAxisID: 'y-axis-count',
             }]
         };
 
@@ -81,15 +81,15 @@ export default class RatingChart extends React.Component {
             scales: {
                 stacked: false,
                 yAxes: [{
-                    type: "linear",
-                    position: "left",
+                    type: 'linear',
+                    position: 'left',
                     display: true,
-                    id: "y-axis-avg",
+                    id: 'y-axis-avg',
                 }, {
-                    type: "linear",
+                    type: 'linear',
                     display: true,
-                    position: "right",
-                    id: "y-axis-count",
+                    position: 'right',
+                    id: 'y-axis-count',
 
                     // grid line settings
                     gridLines: {

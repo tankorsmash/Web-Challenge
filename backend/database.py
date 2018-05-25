@@ -15,7 +15,7 @@ def create_bulk_ratings(rows):
     fields = [Rating.udemy_id, Rating.created, Rating.rating_score]
 
     count = len(rows)
-    print("creating {} rows".format(count))
+    print('creating {} rows'.format(count))
     database = SqliteDatabase('ratings.db')
     with database.atomic():
         step_range = 250 #scale down as needed
@@ -25,7 +25,7 @@ def create_bulk_ratings(rows):
                 fields=fields
             ).execute()
 
-    print("done creating rows")
+    print('done creating rows')
 
 def get_averages_over_time_sql():
     """
@@ -33,13 +33,13 @@ def get_averages_over_time_sql():
     to be processed elsewhere
     """
     ratings = Rating.select(
-        peewee.fn.strftime("%Y-%m-%d-%H", Rating.created),
+        peewee.fn.strftime('%Y-%m-%d-%H', Rating.created),
         peewee.fn.Count(Rating.rating_score),
         peewee.fn.Sum(Rating.rating_score)
     ) \
     .order_by(Rating.created) \
     .group_by(
-        peewee.fn.strftime("%Y-%m-%d-%H", Rating.created)
+        peewee.fn.strftime('%Y-%m-%d-%H', Rating.created)
     ).tuples()
 
     ratings = list(map(lambda data: RatingAggregate(*data), ratings))
@@ -57,7 +57,7 @@ def _get_averages_over_time(all_ratings):
       loop
     """
 
-    TUPLE_DATETIME_FORMAT = "YYYY-MM-DD-HH"
+    TUPLE_DATETIME_FORMAT = 'YYYY-MM-DD-HH'
     start_time = arrow.get(all_ratings[0][0], TUPLE_DATETIME_FORMAT )
     end_time = arrow.utcnow()
 
@@ -74,8 +74,8 @@ def _get_averages_over_time(all_ratings):
             if rating_created > next_hour:
                 if current_count:
                     averages_by_hour[current_hour.format(MODEL_DATE_FORMAT_ARROW)] = {
-                        "rating_average": current_sum/current_count,
-                        "rating_count": current_count
+                        'rating_average': current_sum/current_count,
+                        'rating_count': current_count
                     }
                 break
 
