@@ -26,14 +26,32 @@ def format_averages_for_chartjs(averages):
 
     return date_labels, average_axis, count_axis
 
+def clean_and_update_ratings(clean=True):
+    """
+    wipes database, requeries API and creates db rows
+    """
+    if clean:
+        print("deleting all Ratings")
+        Rating.delete().execute()
+
+    print("fetching from API Ratings")
+    all_ratings = udemy_api.get_all_ratings()
+    print("adding rows")
+    create_bulk_ratings(all_ratings)
+    print("done clean_and_update_ratings")
+
+@server.route('/refresh_ratings')
+def refresh_ratings():
+    clean_and_update_ratings()
+    return jsonify({
+        "success": True,
+    })
 
 @server.route('/ratings')
 def ratings():
-    #WIP only get data if non exists in database
-    #TODO make it autoupdate every hour
+    #if the DB is empty, fetch the data
     if (Rating.select().count() == 0):
-        all_ratings = udemy_api.get_all_ratings()
-        create_bulk_ratings(all_ratings)
+        clean_and_update_ratings(clean=False)
 
     print("getting ratings from DB")
     date_labels, average_axis, count_axis = format_averages_for_chartjs(calc_ratings_over_time())
