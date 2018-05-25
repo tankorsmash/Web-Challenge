@@ -56,11 +56,8 @@ export default class RatingChart extends React.Component {
         };
 
         return (
-            <div className="container">
-                <h3> Hourly average </h3>
+            <div>
                 <Line  options={chartOptions} data={chartData} />
-                <div>
-                </div>
             </div>
         );
     }

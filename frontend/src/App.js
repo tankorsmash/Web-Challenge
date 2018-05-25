@@ -30,7 +30,7 @@ class App extends Component {
 
         return (
             <div className="container">
-                <h3> Hourly average </h3>
+                <h3>Ratings over time</h3>
                 <RatingChart dateLabels={rawChartData.date_labels} averageAxis={rawChartData.average_axis} countAxis={rawChartData.count_axis}  />
                 <div>
                 </div>

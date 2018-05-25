@@ -90,7 +90,7 @@ def get_all_ratings():
         resp = session.get(
             _format_api_url("reviews/"),
             params=params,
-            timeout=3
+            timeout=15
         )
         resp_json = resp.json()
 
