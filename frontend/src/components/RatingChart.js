@@ -77,10 +77,14 @@ export default class RatingChart extends React.Component {
         })
     }
 
-    componentDidMount = async () => {
+    setIntervalUpdate = () => {
         this.forceUpdateInterval = setInterval(() => {
             this.forceUpdate();
         }, 1000*60*60);
+    }
+
+    componentDidMount = async () => {
+        this.setIntervalUpdate()
 
         this.updateData();
     }
@@ -90,6 +94,9 @@ export default class RatingChart extends React.Component {
     }
 
     forceUpdate = async () => {
+        clearInterval(this.forceUpdateInterval);
+        this.setIntervalUpdate();
+
         this.setState({
             forceUpdateButtonText: 'Forcing update...',
             dataButtonsDisabled: true,
