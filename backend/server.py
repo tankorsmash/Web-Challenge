@@ -66,7 +66,11 @@ def fetch_ratings():
         clean_and_update_ratings(clean=False)
 
     print('getting ratings from DB')
-    date_labels, average_axis, count_axis = format_averages_for_chartjs(calc_ratings_over_time())
+    date_labels, average_axis, count_axis = format_averages_for_chartjs(
+        calc_ratings_over_time(
+            request.args.get('date_filter', 'all')
+        )
+    )
     print('returning data')
 
     current_average = udemy_api.get_current_average()

@@ -27,16 +27,34 @@ def create_bulk_ratings(rows):
 
     print('done creating rows')
 
-def get_averages_over_time_sql():
+def get_date_filter_expr(date_filter):
+    if date_filter == 'all':
+        #TODO figure out neutral peewee expression
+        return Rating.created > arrow.now().shift(years=-10).datetime
+    elif date_filter == 'year':
+        return Rating.created > arrow.now().shift(years=-1).datetime
+    elif date_filter == 'month':
+        return Rating.created > arrow.now().shift(months=-1).datetime
+    elif date_filter == 'week':
+        return Rating.created > arrow.now().shift(weeks=-1).datetime
+    elif date_filter == 'days':
+        return Rating.created > arrow.now().shift(days=-1).datetime
+
+    raise Exception('Unknown date_filter {}'.format(date_filter))
+
+def get_averages_over_time_sql(date_filter='all'):
     """
     returns ( year-month-day-hour, num_ratings, total_rating ) for that hour
     to be processed elsewhere
     """
+    date_expr = get_date_filter_expr(date_filter)
+
     ratings = Rating.select(
         peewee.fn.strftime('%Y-%m-%d-%H', Rating.created),
         peewee.fn.Count(Rating.rating_score),
         peewee.fn.Sum(Rating.rating_score)
     ) \
+    .where(date_expr) \
     .order_by(Rating.created) \
     .group_by(
         peewee.fn.strftime('%Y-%m-%d-%H', Rating.created)
@@ -87,8 +105,8 @@ def _get_averages_over_time(all_ratings):
 
     return averages_by_hour
 
-def calc_ratings_over_time():
-    rating_aggregates = get_averages_over_time_sql()
+def calc_ratings_over_time(date_filter='all'):
+    rating_aggregates = get_averages_over_time_sql(date_filter=date_filter)
     return _get_averages_over_time(rating_aggregates)
 
 

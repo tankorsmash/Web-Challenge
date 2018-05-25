@@ -20,6 +20,8 @@ export default class RatingChart extends React.Component {
         refreshButtonText: 'Refresh',
         forceUpdateButtonText: 'Force Update',
 
+        dateFilter: 'all',
+
     }
 
     updateData = async () => {
@@ -27,8 +29,11 @@ export default class RatingChart extends React.Component {
             refreshButtonText: 'Refreshing...',
             dataButtonsDisabled: true,
         });
-        const res = await fetch('/fetch_ratings')
-        const json = await res.json()
+
+        let dateFilter = new URLSearchParams({'date_filter': this.state.dateFilter});
+        const res = await fetch('/fetch_ratings?'+dateFilter.toString());
+        const json = await res.json();
+
         this.setState({
             chartData: json.chart_data,
             refreshButtonText: 'Refresh',
