@@ -66,7 +66,7 @@ def _get_averages_over_time(all_ratings):
     rating_idx = 0
     current_count = 0
     current_sum = 0
-    for current_hour, next_hour in arrow.Arrow.interval('hour', start_time, end_time):
+    for current_hour, next_hour in arrow.Arrow.interval('day', start_time, end_time):
         while rating_idx < len(all_ratings):
             rating = all_ratings[rating_idx]
 
