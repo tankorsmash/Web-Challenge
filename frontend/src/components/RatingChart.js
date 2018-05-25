@@ -1,4 +1,6 @@
 import React from 'react';
+import toastr from 'toastr';
+import './toastr.min.css';
 // import PropTypes from 'prop-types';
 
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
@@ -7,6 +9,10 @@ import { Line } from 'react-chartjs-2';
 const JSON_HEADERS = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
+};
+
+toastr.options = {
+    "positionClass": "toast-bottom-full-width",
 };
 
 class RatingDateFilterDropdown extends React.Component {
@@ -58,6 +64,8 @@ export default class RatingChart extends React.Component {
         const res = await fetch('/fetch_ratings?'+dateFilter.toString());
         const json = await res.json();
 
+        toastr.success("Refreshed chart!");
+
         this.setState({
             chartData: json.chart_data,
             refreshButtonText: 'Refresh',
@@ -90,6 +98,13 @@ export default class RatingChart extends React.Component {
             headers: JSON_HEADERS,
         });
         const json = await res.json()
+
+        if (json.success) {
+            toastr.success(json.message);
+        } else {
+            toastr.warning(json.message);
+        };
+
         this.setState({
             forceUpdateButtonText: 'Force update',
             dataButtonsDisabled: false,

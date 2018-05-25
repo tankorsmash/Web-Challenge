@@ -50,13 +50,13 @@ def refresh_ratings():
     if (not request.json.get('do_refresh')):
         return jsonify({
             'success': False,
-            'message': 'No do_refresh param, no action taken',
+            'message': 'No do_refresh param, no action taken!',
         })
 
     clean_and_update_ratings()
     return jsonify({
         'success': True,
-        'message': 'Cleaned and updated',
+        'message': 'Force-updated ratings!',
     })
 
 @server.route('/fetch_ratings')
