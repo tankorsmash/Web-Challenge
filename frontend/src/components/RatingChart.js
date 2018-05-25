@@ -62,7 +62,7 @@ export default class RatingChart extends React.Component {
         });
 
         let dateFilter = new URLSearchParams({'date_filter': this.state.dateFilter});
-        const res = await fetch('/fetch_ratings?'+dateFilter.toString());
+        const res = await fetch(`/fetch_ratings?${dateFilter.toString()}`);
         const json = await res.json();
 
         if (!firstLoad) {
