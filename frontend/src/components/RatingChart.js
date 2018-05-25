@@ -1,12 +1,36 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import { Button } from 'reactstrap';
+import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Line } from 'react-chartjs-2';
 
 const JSON_HEADERS = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
+};
+
+class RatingDateFilterDropdown extends React.Component {
+    titleCaseDateFilter() {
+        let dateFilter = this.props.currentDateFilter;
+        return dateFilter[0].toUpperCase() + dateFilter.substring(1)
+    }
+
+    render() {
+        return (
+            <UncontrolledDropdown>
+                <DropdownToggle caret>
+                    <small>Range:</small> { this.titleCaseDateFilter() }
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem onClick={() => { this.props.setDateRange('all'); } }>All</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('year'); } }>Year</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('month'); } }>Month</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('week'); } }>Week</DropdownItem>
+                    <DropdownItem onClick={() => { this.props.setDateRange('day'); } }>Day</DropdownItem>
+                </DropdownMenu>
+            </UncontrolledDropdown>
+        );
+    };
 };
 
 export default class RatingChart extends React.Component {
@@ -123,6 +147,13 @@ export default class RatingChart extends React.Component {
         return {chartData, chartOptions};
     }
 
+    setDateRange = (dateFilter) => {
+        console.log("setting datefilter");
+        this.setState({
+            dateFilter: dateFilter,
+        }, this.updateData);
+    };
+
     render() {
         let {chartData, chartOptions} = {...this.getChartData() };
 
@@ -132,8 +163,10 @@ export default class RatingChart extends React.Component {
                     <div className="col h5 justify-content-start" > Current Average: {this.state.currentAverage} </div>
                     <div className="col a justify-content-end">
                         <Button className="float-right" color="primary" disabled={this.state.dataButtonsDisabled} onClick={this.updateData}> {this.state.refreshButtonText} </Button>
-                        &nbsp;
                         <Button className="float-right" color="secondary" disabled={this.state.dataButtonsDisabled} onClick={this.forceUpdate}> {this.state.forceUpdateButtonText} </Button>
+                        <span className="float-right">
+                            <RatingDateFilterDropdown currentDateFilter={this.state.dateFilter} setDateRange={this.setDateRange}className="" />
+                        </span>
                     </div>
                 </div>
                 <Line options={chartOptions} data={chartData} />

@@ -37,7 +37,7 @@ def get_date_filter_expr(date_filter):
         return Rating.created > arrow.now().shift(months=-1).datetime
     elif date_filter == 'week':
         return Rating.created > arrow.now().shift(weeks=-1).datetime
-    elif date_filter == 'days':
+    elif date_filter == 'day':
         return Rating.created > arrow.now().shift(days=-1).datetime
 
     raise Exception('Unknown date_filter {}'.format(date_filter))
