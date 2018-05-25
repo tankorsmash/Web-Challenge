@@ -53,7 +53,7 @@ export default class RatingChart extends React.Component {
         await this.updateData();
     }
 
-    render() {
+    getChartData = () => {
         let {date_labels, average_axis, count_axis} = {...this.state.chartData};
 
         const limit = 1000;
@@ -98,6 +98,12 @@ export default class RatingChart extends React.Component {
                 }],
             },
         };
+
+        return {chartData, chartOptions};
+    }
+
+    render() {
+        let {chartData, chartOptions} = {...this.getChartData() };
 
         return (
             <div>
