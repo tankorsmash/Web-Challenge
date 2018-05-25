@@ -55,6 +55,7 @@ export default class RatingChart extends React.Component {
     }
 
     updateData = async () => {
+        let firstLoad = this.state.chartData.date_labels.length == 0; //hack to not show the toast the first time
         this.setState({
             refreshButtonText: 'Refreshing...',
             dataButtonsDisabled: true,
@@ -64,7 +65,9 @@ export default class RatingChart extends React.Component {
         const res = await fetch('/fetch_ratings?'+dateFilter.toString());
         const json = await res.json();
 
-        toastr.success("Refreshed chart!");
+        if (!firstLoad) {
+            toastr.success("Refreshed chart!");
+        };
 
         this.setState({
             chartData: json.chart_data,
