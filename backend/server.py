@@ -20,8 +20,8 @@ def format_averages_for_chartjs(averages):
     count_axis = []
 
     for date, axes in averages.items():
-        date_labels.append(date)
-        average_axis.append(axes.get('rating_average', -1))
+        date_labels.append(arrow.get(date).format("YYYY-MM-DD"))
+        average_axis.append(round(axes.get('rating_average', -1), 2))
         count_axis.append(axes.get('rating_count', -1))
 
     return date_labels, average_axis, count_axis
